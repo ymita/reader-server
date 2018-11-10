@@ -2,6 +2,7 @@
 
 /Reader/bin
 /Reader/obj
+/Reader/Properties
 /.vs/Reader
 # # compiled output
 # /dist

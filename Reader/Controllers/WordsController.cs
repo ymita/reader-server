@@ -14,27 +14,53 @@ namespace Reader.Controllers
     [ApiController]
     public class WordsController : Controller
     {
-        IEnumerable<Word> getWords()
+        void addWord(Word word)
         {
             using (var db = new SqliteConnection("Filename=words.db"))
             {
-                List<Word> words = new List<Word>();
-
                 db.Open();
 
-                var command = new SqliteCommand("select id, spelling, meaning, text from words", db);
-                var reader = command.ExecuteReader();
+                var command = new SqliteCommand();
+                command.Connection = db;
 
-                while (reader.Read())
+                command.CommandText = "insert into words(id, spelling, meaning, text) values (@id, @spelling, @meaning, @text);";
+                command.Parameters.AddWithValue("@id", word.Id);
+                command.Parameters.AddWithValue("@spelling", word.Spelling);
+                command.Parameters.AddWithValue("@meaning", word.Meaning);
+                command.Parameters.AddWithValue("@text", word.Text);
+                command.ExecuteNonQuery();
+            }
+        }
+        IEnumerable<Word> getWords()
+        {
+            try
+            {
+                using (var db = new SqliteConnection("Filename=words.db"))
                 {
-                    Word word = new Word();
-                    word.Id = Convert.ToInt32(reader["id"]);
-                    word.Spelling = (string)reader["spelling"];
-                    word.Meaning = (string)reader["meaning"];
-                    word.Text = (string)reader["text"];
+                    List<Word> words = new List<Word>();
 
-                    words.Add(word);
+                    db.Open();
+
+                    var command = new SqliteCommand("select id, spelling, meaning, text from words", db);
+                    var reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Word word = new Word();
+                        word.Id = Convert.ToInt32(reader["id"]);
+                        word.Spelling = (string)reader["spelling"];
+                        word.Meaning = (string)reader["meaning"];
+                        word.Text = (string)reader["text"];
+
+                        words.Add(word);
+                    }
+                    return words;
                 }
+            }
+            catch(Exception ex)
+            {
+                List<Word> words = new List<Word>();
+                words.Add(new Word { Id = 999, Meaning = ex.Message });
                 return words;
             }
         }
@@ -83,7 +109,6 @@ namespace Reader.Controllers
             //    //command.Parameters.AddWithValue("@text", "This isn't a platform thing, it's a problem that is endemic to the web.");
             //    //command.ExecuteNonQuery();
 
-            //    //ここから下は未登録
             //    //command.CommandText = "insert into words(id, spelling, meaning, text) values (@id, @spelling, @meaning, @text);";
             //    //command.Parameters.AddWithValue("@id", 6);
             //    //command.Parameters.AddWithValue("@spelling", "hydrolysis");
@@ -98,6 +123,7 @@ namespace Reader.Controllers
             //    //command.Parameters.AddWithValue("@text", "These include the White House’s U.S. Digital Service 18F taskforce, launched in response to the healthcare.gov debacle.");
             //    //command.ExecuteNonQuery();
 
+            //    //ここから下は未登録
             //    //command.CommandText = "insert into words(id, spelling, meaning, text) values (@id, @spelling, @meaning, @text);";
             //    //command.Parameters.AddWithValue("@id", 8);
             //    //command.Parameters.AddWithValue("@spelling", "opulent");
@@ -162,8 +188,10 @@ namespace Reader.Controllers
 
         // POST api/words
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] Word value)
         {
+            this.addWord(value);
+            return new CreatedResult("api/words/" + value.Id, value);
         }
 
         // PUT api/words/5

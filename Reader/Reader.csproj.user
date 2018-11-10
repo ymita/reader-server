@@ -6,5 +6,6 @@
   <PropertyGroup>
     <ActiveDebugProfile>Reader</ActiveDebugProfile>
     <ShowAllFiles>true</ShowAllFiles>
+    <NameOfLastUsedPublishProfile>ym - Web Deploy</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
