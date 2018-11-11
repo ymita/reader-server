@@ -23,8 +23,8 @@ namespace Reader.Controllers
                 var command = new SqliteCommand();
                 command.Connection = db;
 
-                command.CommandText = "insert into words(id, spelling, meaning, text) values (@id, @spelling, @meaning, @text);";
-                command.Parameters.AddWithValue("@id", word.Id);
+                command.CommandText = "insert into words(spelling, meaning, text) values (@spelling, @meaning, @text);";
+                //command.Parameters.AddWithValue("@id", word.Id);
                 command.Parameters.AddWithValue("@spelling", word.Spelling);
                 command.Parameters.AddWithValue("@meaning", word.Meaning);
                 command.Parameters.AddWithValue("@text", word.Text);
@@ -123,7 +123,6 @@ namespace Reader.Controllers
             //    //command.Parameters.AddWithValue("@text", "These include the White House’s U.S. Digital Service 18F taskforce, launched in response to the healthcare.gov debacle.");
             //    //command.ExecuteNonQuery();
 
-            //    //ここから下は未登録
             //    //command.CommandText = "insert into words(id, spelling, meaning, text) values (@id, @spelling, @meaning, @text);";
             //    //command.Parameters.AddWithValue("@id", 8);
             //    //command.Parameters.AddWithValue("@spelling", "opulent");
@@ -131,6 +130,7 @@ namespace Reader.Controllers
             //    //command.Parameters.AddWithValue("@text", "She was also known for her opulent lifestyle.");
             //    //command.ExecuteNonQuery();
 
+            //    //ここから下は未登録
             //    //command.CommandText = "insert into words(id, spelling, meaning, text) values (@id, @spelling, @meaning, @text);";
             //    //command.Parameters.AddWithValue("@id", 9);
             //    //command.Parameters.AddWithValue("@spelling", "stout");
