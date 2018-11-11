@@ -130,7 +130,6 @@ namespace Reader.Controllers
             //    //command.Parameters.AddWithValue("@text", "She was also known for her opulent lifestyle.");
             //    //command.ExecuteNonQuery();
 
-            //    //ここから下は未登録
             //    //command.CommandText = "insert into words(id, spelling, meaning, text) values (@id, @spelling, @meaning, @text);";
             //    //command.Parameters.AddWithValue("@id", 9);
             //    //command.Parameters.AddWithValue("@spelling", "stout");
@@ -145,6 +144,7 @@ namespace Reader.Controllers
             //    //command.Parameters.AddWithValue("@text", "If the destination server filters content based on the origin of the request, the use of a proxy can circumvent this filter.");
             //    //command.ExecuteNonQuery();
 
+            //    //ここから下は未登録
             //    //command.CommandText = "insert into words(id, spelling, meaning, text) values (@id, @spelling, @meaning, @text);";
             //    //command.Parameters.AddWithValue("@id", 11);
             //    //command.Parameters.AddWithValue("@spelling", "circumvent");
@@ -190,6 +190,10 @@ namespace Reader.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Word value)
         {
+            if(value.Meaning == null || value.Spelling == null || value.Text == null)
+            {
+                return new BadRequestResult();
+            }
             this.addWord(value);
             return new CreatedResult("api/words/" + value.Id, value);
         }
